@@ -1,0 +1,10 @@
+# fitness-tracker/.gitignore
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.venv/
+credentials.json
+token.json
