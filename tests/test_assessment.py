@@ -31,7 +31,7 @@ def test_assess_fitness_uses_longest_run():
     ]
     result = assess_fitness(activities)
     assert result["current_pace_min_km"] > 0
-    assert result["projected_finish_seconds"] > result["current_finish_seconds"]
+    assert result["projected_finish_seconds"] < result["current_finish_seconds"]
 
 
 def test_assess_fitness_empty_returns_defaults():

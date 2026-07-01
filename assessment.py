@@ -30,12 +30,10 @@ def assess_fitness(activities: list[dict]) -> dict:
     known_time_s = best["duration_min"] * 60
     known_dist_km = best["distance_km"]
 
-    # current_finish_seconds = baseline run duration (known time)
-    # projected_finish_seconds = Riegel projection to marathon (longer distance → larger value)
-    current_finish_s = known_time_s
-    projected_finish_s = riegel_project(known_time_s, known_dist_km, MARATHON_KM)
+    current_finish_s = riegel_project(known_time_s, known_dist_km, MARATHON_KM)
+    projected_finish_s = current_finish_s * PLAN_IMPROVEMENT_FACTOR
 
-    current_pace = current_finish_s / 60 / known_dist_km
+    current_pace = current_finish_s / 60 / MARATHON_KM
     projected_pace = projected_finish_s / 60 / MARATHON_KM
 
     return {
@@ -43,6 +41,6 @@ def assess_fitness(activities: list[dict]) -> dict:
         "current_finish_seconds": round(current_finish_s),
         "projected_finish_seconds": round(projected_finish_s),
         "projected_pace_min_km": round(projected_pace, 2),
-        "target_label": format_time(projected_finish_s),
-        "projected_label": format_time(projected_finish_s * PLAN_IMPROVEMENT_FACTOR),
+        "target_label": format_time(current_finish_s),
+        "projected_label": format_time(projected_finish_s),
     }
