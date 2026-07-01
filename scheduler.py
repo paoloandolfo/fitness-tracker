@@ -58,6 +58,8 @@ def run_first_time_setup() -> None:
     sc.set_value("metadata", "projected_finish_label", assessment["projected_label"])
     sc.set_value("metadata", "current_pace_min_km", str(assessment["current_pace_min_km"]))
     sc.set_value("metadata", "projected_pace_min_km", str(assessment["projected_pace_min_km"]))
+    sc.set_value("metadata", "current_finish_seconds", str(assessment["current_finish_seconds"]))
+    sc.set_value("metadata", "projected_finish_seconds", str(assessment["projected_finish_seconds"]))
     sc.set_value("metadata", "setup_complete", "true")
 
     print(f"Setup complete. Current projection: {assessment['target_label']} | With plan: {assessment['projected_label']}")
