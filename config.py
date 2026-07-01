@@ -1,23 +1,47 @@
-# fitness-tracker/config.py
 import os
+import json
+import tempfile
 from dotenv import load_dotenv
 
+try:
+    import streamlit as st
+    _secrets = st.secrets
+except Exception:
+    _secrets = {}
+
 load_dotenv()
-load_env = load_dotenv
+load_env = load_dotenv  # callable alias required by downstream modules
 
-MARATHON_DATE = os.getenv("MARATHON_DATE", "2026-10-18")
-PLAN_START_DATE = os.getenv("PLAN_START_DATE", "2026-07-01")
-SPREADSHEET_ID = os.getenv("SPREADSHEET_ID", "")
 
-STRAVA_CLIENT_ID = os.getenv("STRAVA_CLIENT_ID", "")
-STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET", "")
-STRAVA_REFRESH_TOKEN = os.getenv("STRAVA_REFRESH_TOKEN", "")
+def _get(key: str, default: str = "") -> str:
+    try:
+        val = _secrets.get(key, None)
+    except Exception:
+        val = None
+    if val is None:
+        val = os.getenv(key, default)
+    return str(val)
 
-WHOOP_CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "")
-WHOOP_CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "")
-WHOOP_REFRESH_TOKEN = os.getenv("WHOOP_REFRESH_TOKEN", "")
 
-GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON", "credentials.json")
+def get_credentials_path() -> str:
+    raw = _get("GOOGLE_CREDENTIALS_JSON")
+    if raw and raw.startswith("{"):
+        tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+        json.dump(json.loads(raw), tmp)
+        tmp.flush()
+        return tmp.name
+    return raw or "credentials.json"
 
+
+MARATHON_DATE = _get("MARATHON_DATE", "2026-10-18")
+PLAN_START_DATE = _get("PLAN_START_DATE", "2026-07-01")
+SPREADSHEET_ID = _get("SPREADSHEET_ID", "")
+STRAVA_CLIENT_ID = _get("STRAVA_CLIENT_ID", "")
+STRAVA_CLIENT_SECRET = _get("STRAVA_CLIENT_SECRET", "")
+STRAVA_REFRESH_TOKEN = _get("STRAVA_REFRESH_TOKEN", "")
+WHOOP_CLIENT_ID = _get("WHOOP_CLIENT_ID", "")
+WHOOP_CLIENT_SECRET = _get("WHOOP_CLIENT_SECRET", "")
+WHOOP_REFRESH_TOKEN = _get("WHOOP_REFRESH_TOKEN", "")
+GOOGLE_CREDENTIALS_JSON = get_credentials_path()
 RECOVERY_RED_THRESHOLD = 33
 RECOVERY_AMBER_THRESHOLD = 66
