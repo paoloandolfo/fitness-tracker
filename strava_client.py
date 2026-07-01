@@ -23,11 +23,8 @@ class StravaClient:
         return [self._parse(a) for a in raw if a.type in TRACKED_TYPES]
 
     def get_athlete_vo2max(self) -> float | None:
-        try:
-            zones = self._client.get_athlete_zones()
-            return float(zones.heart_rate.custom_zones[0].max) if zones else None
-        except Exception:
-            return None
+        # Strava API does not expose VO2max; populated from wearable data in a later integration
+        return None
 
     def _parse(self, activity) -> dict:
         distance_km = float(activity.distance) / 1000
