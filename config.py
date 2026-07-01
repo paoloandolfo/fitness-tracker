@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+load_env = load_dotenv
 
 MARATHON_DATE = os.getenv("MARATHON_DATE", "2026-10-18")
 PLAN_START_DATE = os.getenv("PLAN_START_DATE", "2026-07-01")
