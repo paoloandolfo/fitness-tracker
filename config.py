@@ -24,6 +24,14 @@ def _get(key: str, default: str = "") -> str:
 
 
 def get_credentials_path() -> str:
+    try:
+        if "gcp_service_account" in _secrets:
+            tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+            json.dump(dict(_secrets["gcp_service_account"]), tmp)
+            tmp.flush()
+            return tmp.name
+    except Exception:
+        pass
     raw = _get("GOOGLE_CREDENTIALS_JSON")
     if raw and raw.startswith("{"):
         tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
